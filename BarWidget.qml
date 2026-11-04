@@ -112,7 +112,7 @@ BarWidget {
   property real followCenter: 0     // ink center, in Portal's own coordinates
   property var neighbor: null
   readonly property bool following: sizeSetting !== "standard" && followInk > 0
-  readonly property real ink: following ? followInk : 12
+  readonly property real ink: (following ? followInk : 12) * (sizeSetting === "large" ? 1.15 : 1)
   // Strokes are Elementa's 1.4 (Light) / 1.65 (Bold) at 12 px, scaled with the ink
   readonly property real stroke: (bold ? 1.65 : 1.4) * Math.max(0.85, Math.min(1.35, ink / 12))
   readonly property real stageOffset: following
@@ -226,8 +226,8 @@ BarWidget {
 
     Item {
       id: stage
-      width: Math.max(16, Math.ceil(root.ink + 4))
-      height: width
+      width: Math.max(16, Math.ceil(root.ink * 1.3 + 4))
+      height: Math.max(16, Math.ceil(root.ink + 4))
       anchors.centerIn: parent
       anchors.verticalCenterOffset: root.stageOffset
       scale: button.pressScale
@@ -252,9 +252,12 @@ BarWidget {
           var ctx = getContext("2d")
           ctx.reset()
           var c = String(tint)
-          // A 12 x 12 grid centered in the canvas: X(u)/Y(u) map grid units to px
-          var u = root.ink / 12, ox = width / 2 - 6 * u, oy = height / 2 - 6 * u
-          function X(v) { return ox + v * u }
+          // A 12-unit-tall grid centered in the canvas: X(u)/Y(u) map grid units
+          // to px. Prompt-shaped marks are wider than tall, as a prompt is, so
+          // their grid is stretched sideways (sx); strokes stay round.
+          var sx = ({ classic: 1.25, alchemy: 1.25, modern: 1.15, atomic: 1.15, nouveau: 1.15, retro: 1.15 })[kind] || 1
+          var u = root.ink / 12, ox = width / 2 - 6 * u * sx, oy = height / 2 - 6 * u
+          function X(v) { return ox + v * u * sx }
           function Y(v) { return oy + v * u }
           function line(pts) { ctx.beginPath(); ctx.moveTo(X(pts[0]), Y(pts[1])); for (var i = 2; i < pts.length; i += 2) ctx.lineTo(X(pts[i]), Y(pts[i + 1])); ctx.stroke() }
           function poly(pts) { ctx.beginPath(); ctx.moveTo(X(pts[0]), Y(pts[1])); for (var i = 2; i < pts.length; i += 2) ctx.lineTo(X(pts[i]), Y(pts[i + 1])); ctx.closePath() }
@@ -286,7 +289,7 @@ BarWidget {
             // a heavy chevron and a block cursor, as today's shell prompts
             ctx.lineWidth = lw * 1.5
             line([1 + h * 1.5, 1.6, 6, 6, 1 + h * 1.5, 10.4])
-            ctx.fillRect(X(8.2), Y(1.8), 3.4 * u, 8.4 * u)
+            ctx.fillRect(X(8.2), Y(1.8), 3.4 * u * sx, 8.4 * u)
           } else if (kind === "retro") {
             // a small CRT: rounded screen, a prompt on it, a neck and a foot
             rrect(h, h, 12 - 2 * h, 9 - h, 2.2); ctx.stroke()
@@ -351,10 +354,11 @@ BarWidget {
             ctx.globalCompositeOperation = "source-over"
           } else if (kind === "pixel") {
             // 8-bit: the prompt built from whole pixels
-            var p = 1.5
+            // 15 units wide, square pixels (sx is 1 for Pixel)
+            var p = 1.6, x0 = -1.5
             var cells = [[0,0],[1,1],[2,2],[3,3],[2,4],[1,5],[0,6]]
-            for (var i = 0; i < cells.length; i++) ctx.fillRect(X(cells[i][0] * p), Y(0.75 + cells[i][1] * p), p * u, p * u)
-            ctx.fillRect(X(6.75), Y(12 - p), 5.25 * u, p * u)
+            for (var i = 0; i < cells.length; i++) ctx.fillRect(X(x0 + cells[i][0] * p), Y(0.4 + cells[i][1] * p), p * u, p * u)
+            ctx.fillRect(X(x0 + 5 * p), Y(12 - p), 4 * p * u, p * u)
           }
         }
       }

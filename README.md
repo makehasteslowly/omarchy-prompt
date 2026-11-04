@@ -23,7 +23,7 @@ Left-click opens the Omarchy menu, right-click opens a terminal, and middle-clic
 
 ## Settings
 - **Mark**: one of the styles above, a system mark, or Match Elementa.
-- **Size**: Match next widget, or Standard (12 px).
+- **Size**: Match next widget, Large (15% bigger than that), or Standard (12 px).
 - **Weight**: Light or Bold strokes.
 - **Color**: the bar's text color, or the theme accent. The seal keeps its vermilion.
 
