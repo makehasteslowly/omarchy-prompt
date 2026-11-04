@@ -1,4 +1,4 @@
-# Portal
+# Prompt
 
 The Omarchy menu button as a terminal glyph, in your choice of fifteen styles.
 
@@ -22,7 +22,7 @@ The Omarchy menu button as a terminal glyph, in your choice of fifteen styles.
 
 Also the Omarchy, Arch Linux, Hyprland and Linux marks.
 
-Every mark is drawn on one grid and centered on its ink rather than its font box. By default Portal measures the glyph of whatever widget follows it on the bar and matches its height and vertical center, so the two read as one row; **Standard** keeps it at 12 px. **Match Elementa** picks the style of [Elementa Spaces](https://github.com/makehasteslowly/omarchy-elementa-spaces)' tradition and follows its Light/Bold (Elemental → Deco, Alchemical → Alchemical, Godai → Zen, Wu Xing → Seal).
+Every mark is drawn on one grid and centered on its ink rather than its font box. By default Prompt measures the glyph of whatever widget follows it on the bar and matches its height and vertical center, so the two read as one row; **Standard** keeps it at 12 px. **Match Elementa** picks the style of [Elementa Spaces](https://github.com/makehasteslowly/omarchy-elementa-spaces)' tradition and follows its Light/Bold (Elemental → Deco, Alchemical → Alchemical, Godai → Zen, Wu Xing → Seal).
 
 Left-click opens the Omarchy menu, right-click opens a terminal, and middle-click steps to the next glyph.
 

@@ -4,7 +4,7 @@ import Quickshell.Io
 import qs.Ui
 import qs.Commons
 
-// Portal: the Omarchy menu button as a terminal glyph, drawn in a choice of
+// Prompt: the Omarchy menu button as a terminal glyph, drawn in a choice of
 // styles: Classic, Modern, Retro, Deco, Atomic, Nouveau, Alchemical, Zen, Seal
 // and Pixel, plus the Omarchy, Arch, Hyprland and Linux marks.
 //
@@ -16,7 +16,7 @@ import qs.Commons
 // Elemental -> Deco, Alchemical -> Alchemical, Godai -> Zen, Wu Xing -> Seal.
 BarWidget {
   id: root
-  moduleName: "makehasteslowly.portal"
+  moduleName: "makehasteslowly.prompt"
 
   readonly property string markSetting: String(setting("mark", "elementa"))
   readonly property string colorSetting: String(setting("color", "theme"))
@@ -25,7 +25,7 @@ BarWidget {
 
   // ---- Elementa's settings, read from the shell config (plugins can't see
   // each other's widgets). Elementa saves every change there, right-click
-  // switches included, so watching the file keeps Portal in step. A file read
+  // switches included, so watching the file keeps Prompt in step. A file read
   // mid-write is skipped; the next change event brings the good copy.
   property bool elementaOnBar: false
   property string elementaStyle: "elements"
@@ -82,7 +82,7 @@ BarWidget {
     var i = cycleOrder.indexOf(root.mark)
     var next = cycleOrder[(i + 1) % cycleOrder.length]
     root.pendingMark = next
-    if (root.bar) root.bar.run("omarchy-bar set makehasteslowly.portal mark " + next)
+    if (root.bar) root.bar.run("omarchy-bar set makehasteslowly.prompt mark " + next)
   }
   readonly property string mark: {
     if (pendingMark !== "") return pendingMark
@@ -99,17 +99,17 @@ BarWidget {
     : (mark === "seal" ? sealColor : themeColor)
 
   // ---- Size and placement. Standard is Elementa's 12 px of ink. "Match next
-  // widget" (the default) measures the widget that follows Portal on the bar
+  // widget" (the default) measures the widget that follows Prompt on the bar
   // from a snapshot: its first glyph (the first run of lit columns) and the
-  // gap to its second. Portal then takes the glyph's height (the tallest
+  // gap to its second. Prompt then takes the glyph's height (the tallest
   // unbroken run of rows in those columns, so a state mark beneath it is left
   // out), sits on the same bottom line, and leaves the same gap before the
   // neighbor that the neighbor leaves between its own glyphs. A reading is
   // thrown away if it looks like a hover highlight or a frame (taller than
   // 80% of the widget) or nothing at all (under 6 px), keeping the last good one.
   property real followInk: 0        // 0 = no reading yet
-  property real followBottom: 0     // ink bottom, in Portal's own coordinates
-  property real followLeft: 0       // neighbor's first ink column, Portal coordinates
+  property real followBottom: 0     // ink bottom, in Prompt's own coordinates
+  property real followLeft: 0       // neighbor's first ink column, Prompt coordinates
   property real followGap: -1       // gap between the neighbor's first two glyphs (-1 = unknown)
   property var neighbor: null
   readonly property bool following: sizeSetting !== "standard" && followInk > 0

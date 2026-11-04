@@ -1,14 +1,14 @@
 #!/bin/bash
-# Live test: renders every Portal mark on the running bar and checks it
+# Live test: renders every Prompt mark on the running bar and checks it
 # against the widget that follows it (gap, bottom line, height), in each
-# size, then scans the shell log for Portal errors. Settings are changed with
+# size, then scans the shell log for Prompt errors. Settings are changed with
 # omarchy-bar (the safe, serialized path) and restored at the end.
 #
-# Needs: Portal at the far left of a horizontal bar with a glyph widget
+# Needs: Prompt at the far left of a horizontal bar with a glyph widget
 # (e.g. Elementa Spaces) after it; grim, ImageMagick, python3.
 # Usage: tests/live.sh [output-dir]
 set -u
-P=makehasteslowly.portal
+P=makehasteslowly.prompt
 OUT=${1:-$(mktemp -d)}
 mkdir -p "$OUT"
 MARKS=$(python3 -c "import json;m=json.load(open('$(dirname "$0")/../manifest.json'));print(' '.join(o['value'] for o in [s for s in m['barWidget']['schema'] if s['key']=='mark'][0]['options'] if o['value']!='elementa'))")
@@ -101,7 +101,7 @@ for mk in $MARKS; do
   if [[ $hP == nan ]]; then echo "bold/$mk: FAIL blank"; fail=$((fail+1)); else pass=$((pass+1)); fi
 done
 
-ERR=$(tail -n +$LOGSTART "$LOG" | grep -aiE 'TypeError|ReferenceError|failed|error' | grep -ai 'makehasteslowly.portal' | grep -v "outside of the config")
+ERR=$(tail -n +$LOGSTART "$LOG" | grep -aiE 'TypeError|ReferenceError|failed|error' | grep -ai 'makehasteslowly.prompt' | grep -v "outside of the config")
 if [[ -n $ERR ]]; then echo "Shell log errors:"; echo "$ERR" | tail -5; fail=$((fail+1)); else pass=$((pass+1)); fi
 
 echo "Live: $pass passed, $fail failed  (captures in $OUT)"

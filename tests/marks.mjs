@@ -1,4 +1,4 @@
-// Static consistency checks for Portal's marks. Run: node tests/marks.mjs
+// Static consistency checks for Prompt's marks. Run: node tests/marks.mjs
 //
 // Every mark offered in settings must be drawable, placeable and reachable:
 //   - drawn marks have a paint branch, ink extents, and (if wide) a stretch

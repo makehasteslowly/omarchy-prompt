@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "id": "makehasteslowly.portal",
-  "name": "Portal",
+  "id": "makehasteslowly.prompt",
+  "name": "Prompt",
   "version": "1.0.0",
   "author": "makehasteslowly",
   "license": "MIT",
-  "homepage": "https://github.com/makehasteslowly/omarchy-portal",
+  "homepage": "https://github.com/makehasteslowly/omarchy-prompt",
   "description": "The Omarchy menu button as a terminal glyph in your choice of style: Classic, Dollar, Arrow, Lambda, Modern, Cursor, Window, Retro, Deco, Atomic, Nouveau, Alchemical, Zen, Seal or Pixel, plus the Omarchy, Arch, Hyprland and Linux marks. It matches the size, bottom line and spacing of whatever follows it on the bar; Match Elementa picks the style of Elementa Spaces' tradition. Left-click opens the menu, right-click a terminal, middle-click steps to the next glyph. No dependencies, no network.",
   "kinds": [
     "bar-widget"
@@ -14,7 +14,7 @@
     "barWidget": "BarWidget.qml"
   },
   "barWidget": {
-    "displayName": "Portal",
+    "displayName": "Prompt",
     "description": "The menu button as a terminal glyph, in fifteen styles.",
     "category": "Appearance",
     "allowMultiple": false,
@@ -119,7 +119,7 @@
         "key": "size",
         "type": "enum",
         "label": "Size",
-        "description": "Match next widget measures the glyph of whatever follows Portal on the bar and matches its height and vertical center; Large is 15% bigger than that; Standard is 12 px.",
+        "description": "Match next widget measures the glyph of whatever follows Prompt on the bar and matches its height and vertical center; Large is 15% bigger than that; Standard is 12 px.",
         "defaultValue": "follow",
         "options": [
           {
