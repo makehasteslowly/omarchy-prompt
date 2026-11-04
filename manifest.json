@@ -1,0 +1,133 @@
+{
+  "schemaVersion": 1,
+  "id": "makehasteslowly.portal",
+  "name": "Portal",
+  "version": "1.0.0",
+  "author": "makehasteslowly",
+  "license": "MIT",
+  "homepage": "https://github.com/makehasteslowly/omarchy-portal",
+  "description": "The Omarchy menu button as a terminal glyph in your choice of style: Classic, Modern, Retro, Deco, Atomic, Nouveau, Alchemical, Zen, Seal or Pixel, plus the Omarchy, Arch, Hyprland and Linux marks. Every mark is drawn to one 12 px grid and centered on its ink, so it lines up with the bar; Match Elementa picks the style of Elementa Spaces' tradition. Left-click opens the menu, right-click a terminal. No dependencies, no network.",
+  "kinds": [
+    "bar-widget"
+  ],
+  "entryPoints": {
+    "barWidget": "BarWidget.qml"
+  },
+  "barWidget": {
+    "displayName": "Portal",
+    "description": "The menu button as a terminal glyph, in ten styles.",
+    "category": "Appearance",
+    "allowMultiple": false,
+    "defaultSection": "left",
+    "defaults": {
+      "mark": "classic",
+      "weight": "light",
+      "color": "theme"
+    },
+    "schema": [
+      {
+        "key": "mark",
+        "type": "enum",
+        "label": "Mark",
+        "description": "Match Elementa picks the style of Elementa Spaces' tradition and follows its Light/Bold: Elemental → Deco, Alchemical → Alchemical, Godai → Zen, Wu Xing → Seal.",
+        "defaultValue": "classic",
+        "options": [
+          {
+            "value": "classic",
+            "label": "Classic  ·  >_"
+          },
+          {
+            "value": "modern",
+            "label": "Modern  ·  heavy chevron, block cursor"
+          },
+          {
+            "value": "retro",
+            "label": "Retro  ·  a little CRT"
+          },
+          {
+            "value": "deco",
+            "label": "Deco  ·  streamline chevrons, cut-corner frame"
+          },
+          {
+            "value": "atomic",
+            "label": "Atomic  ·  boomerang and starburst"
+          },
+          {
+            "value": "nouveau",
+            "label": "Nouveau  ·  whiplash curl and leaf"
+          },
+          {
+            "value": "alchemy",
+            "label": "Alchemical  ·  the fire triangle"
+          },
+          {
+            "value": "zen",
+            "label": "Zen  ·  ensō"
+          },
+          {
+            "value": "seal",
+            "label": "Seal  ·  令 in vermilion"
+          },
+          {
+            "value": "pixel",
+            "label": "Pixel  ·  8-bit"
+          },
+          {
+            "value": "elementa",
+            "label": "Match Elementa"
+          },
+          {
+            "value": "omarchy",
+            "label": "Omarchy"
+          },
+          {
+            "value": "archlinux",
+            "label": "Arch Linux"
+          },
+          {
+            "value": "hyprland",
+            "label": "Hyprland"
+          },
+          {
+            "value": "linux",
+            "label": "Linux"
+          }
+        ]
+      },
+      {
+        "key": "weight",
+        "type": "enum",
+        "label": "Weight",
+        "description": "Stroke weight of the drawn marks (Elementa's Light and Bold). Match Elementa follows Elementa instead.",
+        "defaultValue": "light",
+        "options": [
+          {
+            "value": "light",
+            "label": "Light"
+          },
+          {
+            "value": "bold",
+            "label": "Bold"
+          }
+        ]
+      },
+      {
+        "key": "color",
+        "type": "enum",
+        "label": "Color",
+        "description": "Theme uses the bar's own text color (the seal keeps its vermilion); Accent uses the theme's accent.",
+        "defaultValue": "theme",
+        "options": [
+          {
+            "value": "theme",
+            "label": "Theme"
+          },
+          {
+            "value": "accent",
+            "label": "Accent"
+          }
+        ]
+      }
+    ]
+  }
+}
