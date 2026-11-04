@@ -76,9 +76,6 @@ BarWidget {
   // shows at once (pendingMark) and is saved like any setting.
   readonly property var cycleOrder: ["classic", "modern", "retro", "deco", "atomic", "nouveau", "alchemy", "zen", "seal", "pixel",
                                      "omarchy", "archlinux", "hyprland", "linux"]
-  readonly property var markNames: ({ classic: "Classic", modern: "Modern", retro: "Retro", deco: "Deco", atomic: "Atomic",
-                                      nouveau: "Nouveau", alchemy: "Alchemical", zen: "Zen", seal: "Seal", pixel: "Pixel",
-                                      omarchy: "Omarchy", archlinux: "Arch Linux", hyprland: "Hyprland", linux: "Linux" })
   property string pendingMark: ""
   onMarkSettingChanged: pendingMark = ""
   function cycleMark() {
@@ -269,8 +266,7 @@ BarWidget {
     verticalPadding: 6
     fixedWidth: root.vertical ? root.barSize : Style.space(22)
     fixedHeight: root.barSize
-    tooltipText: "Menu  ·  right-click for a terminal  ·  middle-click for the next glyph ("
-      + (root.markSetting === "elementa" && root.pendingMark === "" ? "Match Elementa" : (root.markNames[root.mark] || "")) + ")"
+    tooltipText: ""   // no hover popup: the button speaks for itself
     onPressed: function(which) {
       if (!root.bar) return
       if (which === Qt.RightButton) root.bar.run("xdg-terminal-exec")
