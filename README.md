@@ -1,6 +1,10 @@
 # Prompt
 
-The Omarchy menu button as a terminal glyph, in your choice of fifteen styles.
+The Omarchy menu button as a terminal glyph, in your choice of fifteen styles. Middle-click to step through them.
+
+![Middle-click steps through the glyphs; each one sits level with the bar beside it](docs/cycle.gif)
+
+![The fifteen styles and four system marks, each beside Elementa Spaces' first glyph](docs/styles.png)
 
 | Mark | Style |
 |---|---|
@@ -26,13 +30,29 @@ Every mark is drawn on one grid and centered on its ink rather than its font box
 
 Left-click opens the Omarchy menu, right-click opens a terminal, and middle-click steps to the next glyph.
 
+## Install
+
+```bash
+omarchy plugin add https://github.com/makehasteslowly/omarchy-prompt.git --enable
+```
+
+Prompt takes the menu button's place at the left of the bar. If you use another menu-button widget (the stock Omarchy menu button, Glyph Menu and the like), remove it from the bar so you don't have two.
+
 ## Settings
 - **Mark**: one of the styles above, a system mark, or Match Elementa.
 - **Size**: Match next widget, Large (15% bigger than that), or Standard (12 px).
 - **Weight**: Light or Bold strokes.
 - **Color**: the bar's text color, or the theme accent. The seal keeps its vermilion.
 
-No dependencies, no network.
+No dependencies, no network. Prompt uses fonts Omarchy already installs (the bar's Nerd Font, Omarchy's own font for its mark, Noto Serif CJK for the seal's 令). With Match Elementa it reads Elementa Spaces' style from your shell config; it never writes it.
+
+## Uninstall
+
+```bash
+omarchy plugin remove makehasteslowly.prompt
+```
+
+Then add your previous menu button back to the bar if you removed one.
 
 ## Tests
 - `node tests/marks.mjs` checks that every mark in settings can be drawn, placed and reached by middle-click, and that the defaults, README and manifest agree.
