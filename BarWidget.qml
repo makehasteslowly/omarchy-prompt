@@ -90,6 +90,13 @@ BarWidget {
     return drawnMarks.indexOf(markSetting) >= 0 || fontMarks[markSetting] !== undefined ? markSetting : "classic"
   }
   readonly property bool drawn: drawnMarks.indexOf(mark) >= 0
+  // Nerd Font marks are drawn in the bar's font when it is a Nerd Font, else in
+  // Omarchy's JetBrainsMono Nerd Font (on every system), never left to font
+  // fallback: the font that draws a glyph must be the one its ink is measured in
+  readonly property string iconFont: {
+    var bf = root.bar ? String(root.bar.fontFamily) : String(Style.font.family)
+    return /nerd font|\bnf\b/i.test(bf) ? bf : "JetBrainsMono Nerd Font"
+  }
 
   // ---- Color: the bar's own text color, so the button belongs to the bar
   // (the seal keeps its vermilion), or the theme accent.
@@ -467,7 +474,7 @@ BarWidget {
         glyph: root.fontMarks[root.mark] ? String.fromCodePoint(root.fontMarks[root.mark].glyph) : ""
         family: root.fontMarks[root.mark] && root.fontMarks[root.mark].family !== ""
           ? root.fontMarks[root.mark].family
-          : (root.bar ? root.bar.fontFamily : Style.font.family)
+          : root.iconFont
       }
     }
   }
