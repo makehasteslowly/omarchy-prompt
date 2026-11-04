@@ -36,6 +36,7 @@ No dependencies, no network.
 
 ## Tests
 - `node tests/marks.mjs` checks that every mark in settings can be drawn, placed and reached by middle-click, and that the defaults, README and manifest agree.
+- `tests/independence.sh` runs the bar with every combination of Heliolune, Elementa Spaces and Prompt and checks each one present loads, answers or draws, and logs nothing; it backs up and restores your bar config.
 - `tests/live.sh` renders every mark on the running bar in each size and Bold, checks gap, bottom line and height against the next widget, and scans the shell log. Settings are restored afterwards.
 
 ## License

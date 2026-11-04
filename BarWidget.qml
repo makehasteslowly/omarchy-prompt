@@ -113,7 +113,9 @@ BarWidget {
   property real followGap: -1       // gap between the neighbor's first two glyphs (-1 = unknown)
   property var neighbor: null
   readonly property bool following: sizeSetting !== "standard" && followInk > 0
-  readonly property real ink: (following ? followInk : 12) * (sizeSetting === "large" ? 1.15 : 1)
+  // Matching never shrinks the menu button below 10 px: a neighbor with a tiny
+  // icon would otherwise leave it too small to find
+  readonly property real ink: (following ? Math.max(10, followInk) : 12) * (sizeSetting === "large" ? 1.15 : 1)
   // Strokes are Elementa's 1.4 (Light) / 1.65 (Bold) at 12 px, scaled with the ink
   readonly property real stroke: (bold ? 1.65 : 1.4) * Math.max(0.85, Math.min(1.35, ink / 12))
   readonly property real stageOffset: following
