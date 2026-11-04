@@ -19,7 +19,7 @@ Also the Omarchy, Arch Linux, Hyprland and Linux marks.
 
 Every mark is drawn to one 12 px grid and centered on its ink rather than its font box, so it sits level with the rest of the bar. **Match Elementa** picks the style of [Elementa Spaces](https://github.com/makehasteslowly/omarchy-elementa-spaces)' tradition and follows its Light/Bold (Elemental → Deco, Alchemical → Alchemical, Godai → Zen, Wu Xing → Seal).
 
-Left-click opens the Omarchy menu; right-click opens a terminal.
+Left-click opens the Omarchy menu, right-click opens a terminal, and middle-click steps to the next glyph.
 
 ## Settings
 - **Mark**: one of the styles above, a system mark, or Match Elementa.
