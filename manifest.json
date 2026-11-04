@@ -22,7 +22,8 @@
     "defaults": {
       "mark": "classic",
       "weight": "light",
-      "color": "theme"
+      "color": "theme",
+      "size": "follow"
     },
     "schema": [
       {
@@ -91,6 +92,23 @@
           {
             "value": "linux",
             "label": "Linux"
+          }
+        ]
+      },
+      {
+        "key": "size",
+        "type": "enum",
+        "label": "Size",
+        "description": "Match next widget measures the glyph of whatever follows Portal on the bar and matches its height and vertical center. Standard is 12 px.",
+        "defaultValue": "follow",
+        "options": [
+          {
+            "value": "follow",
+            "label": "Match next widget"
+          },
+          {
+            "value": "standard",
+            "label": "Standard"
           }
         ]
       },

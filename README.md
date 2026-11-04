@@ -17,12 +17,13 @@ The Omarchy menu button as a terminal glyph, in your choice of style.
 
 Also the Omarchy, Arch Linux, Hyprland and Linux marks.
 
-Every mark is drawn to one 12 px grid and centered on its ink rather than its font box, so it sits level with the rest of the bar. **Match Elementa** picks the style of [Elementa Spaces](https://github.com/makehasteslowly/omarchy-elementa-spaces)' tradition and follows its Light/Bold (Elemental → Deco, Alchemical → Alchemical, Godai → Zen, Wu Xing → Seal).
+Every mark is drawn on one grid and centered on its ink rather than its font box. By default Portal measures the glyph of whatever widget follows it on the bar and matches its height and vertical center, so the two read as one row; **Standard** keeps it at 12 px. **Match Elementa** picks the style of [Elementa Spaces](https://github.com/makehasteslowly/omarchy-elementa-spaces)' tradition and follows its Light/Bold (Elemental → Deco, Alchemical → Alchemical, Godai → Zen, Wu Xing → Seal).
 
 Left-click opens the Omarchy menu, right-click opens a terminal, and middle-click steps to the next glyph.
 
 ## Settings
 - **Mark**: one of the styles above, a system mark, or Match Elementa.
+- **Size**: Match next widget, or Standard (12 px).
 - **Weight**: Light or Bold strokes.
 - **Color**: the bar's text color, or the theme accent. The seal keeps its vermilion.
 

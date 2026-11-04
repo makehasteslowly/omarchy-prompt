@@ -21,6 +21,7 @@ BarWidget {
   readonly property string markSetting: String(setting("mark", "elementa"))
   readonly property string colorSetting: String(setting("color", "theme"))
   readonly property string weightSetting: String(setting("weight", "light"))
+  readonly property string sizeSetting: String(setting("size", "follow"))
 
   // ---- Elementa's settings, read from the shell config (plugins can't see
   // each other's widgets). Elementa saves every change there, right-click
@@ -58,7 +59,8 @@ BarWidget {
   // Light or dark bar, decided exactly as Elementa decides it
   readonly property color barBg: {
     var bg = (Color.bar && Color.bar.background !== undefined) ? Color.bar.background : Color.background
-    return (bg.a !== undefined && bg.a < 0.25) ? Color.background : bg
+    if (!bg) return Qt.rgba(0, 0, 0, 1)
+    return (bg.a !== undefined && bg.a < 0.25 && Color.background) ? Color.background : bg
   }
   readonly property bool lightBar: 0.2126 * barBg.r + 0.7152 * barBg.g + 0.0722 * barBg.b > 0.48
 
@@ -99,9 +101,106 @@ BarWidget {
   readonly property color tint: colorSetting === "accent" ? Color.accent
     : (mark === "seal" ? sealColor : themeColor)
 
-  // Elementa's sizes: 12 px of ink, strokes 1.4 (Light) / 1.65 (Bold)
-  readonly property real ink: 12
-  readonly property real stroke: bold ? 1.65 : 1.4
+  // ---- Size. Standard is Elementa's 12 px of ink. "Match next widget" (the
+  // default) measures the widget that follows Portal on the bar: it takes a
+  // snapshot, finds the ink of its first glyph (the tallest unbroken run of
+  // rows in its first 26 px, so a state mark under the glyph is left out),
+  // and matches that height and vertical center. A reading is thrown away if
+  // it looks like a hover highlight or a frame (taller than 80% of the
+  // widget) or nothing at all (under 6 px), keeping the last good one.
+  property real followInk: 0        // 0 = no reading yet
+  property real followCenter: 0     // ink center, in Portal's own coordinates
+  property var neighbor: null
+  readonly property bool following: sizeSetting !== "standard" && followInk > 0
+  readonly property real ink: following ? followInk : 12
+  // Strokes are Elementa's 1.4 (Light) / 1.65 (Bold) at 12 px, scaled with the ink
+  readonly property real stroke: (bold ? 1.65 : 1.4) * Math.max(0.85, Math.min(1.35, ink / 12))
+  readonly property real stageOffset: following
+    ? followCenter - root.height / 2
+    : (elementaOnBar && !vertical ? -1 : 0)
+
+  function findNeighbor() {
+    if (root.vertical || !root.visible || root.width <= 0) { root.neighbor = null; return }
+    var me = root.mapToItem(null, 0, 0), myRight = me.x + root.width
+    var level = root, best = null, bestX = 1e9
+    for (var depth = 0; depth < 6 && level && level.parent && !best; depth++) {
+      var sibs = level.parent.children
+      for (var i = 0; i < sibs.length; i++) {
+        var c = sibs[i]
+        if (c === level || !c.visible || c.width < 4 || c.height < 4) continue
+        var p = c.mapToItem(null, 0, 0)
+        if (p.x >= myRight - 2 && p.x < bestX && p.y < me.y + root.height && p.y + c.height > me.y) { best = c; bestX = p.x }
+      }
+      level = level.parent
+    }
+    root.neighbor = best
+  }
+  function measureNeighbor() {
+    if (root.sizeSetting === "standard") return
+    findNeighbor()
+    var n = root.neighbor
+    if (!n) return
+    var w = Math.min(n.width, 26), h = n.height
+    n.grabToImage(function(result) {
+      probe.snapTop = n.mapToItem(root, 0, 0).y
+      probe.snapH = h
+      // Draw the snapshot at a known size (2x) and read back what the canvas
+      // really holds; its pixel size is taken from the data, not assumed
+      probe.fullW = Math.ceil(n.width * 2)
+      probe.imgW = Math.ceil(w * 2); probe.imgH = Math.ceil(h * 2)
+      probe.snapUrl = result.url
+      probe.loadImage(result.url)
+    }, Qt.size(Math.ceil(n.width * 2), Math.ceil(h * 2)))
+  }
+  Timer { id: measureSoon; interval: 400; onTriggered: root.measureNeighbor() }
+  Timer { interval: 15000; repeat: true; running: root.sizeSetting !== "standard"; onTriggered: root.measureNeighbor() }
+  Component.onCompleted: measureSoon.restart()
+  onSizeSettingChanged: measureSoon.restart()
+  onWidthChanged: measureSoon.restart()
+  Connections {
+    target: root.neighbor
+    ignoreUnknownSignals: true
+    function onWidthChanged() { measureSoon.restart() }
+    function onHeightChanged() { measureSoon.restart() }
+  }
+
+  // Off-screen reader for the snapshot (a Canvas can read pixels back)
+  Canvas {
+    id: probe
+    property string snapUrl: ""
+    property real snapTop: 0
+    property real snapH: 0
+    property int imgW: 1
+    property int imgH: 1
+    property int fullW: 1
+    width: Math.max(1, imgW)
+    height: Math.max(1, imgH)
+    opacity: 0
+    enabled: false
+    renderStrategy: Canvas.Immediate
+    onImageLoaded: requestPaint()
+    onPaint: {
+      if (snapUrl === "" || !isImageLoaded(snapUrl)) return
+      var ctx = getContext("2d")
+      ctx.clearRect(0, 0, width, height)
+      ctx.drawImage(snapUrl, 0, 0, fullW, imgH)
+      var img = ctx.getImageData(0, 0, imgW, imgH)
+      var data = img.data, W = img.width, H = img.height
+      var k = H / snapH   // device pixels per logical pixel in what we read
+      var runStart = -1, bestTop = -1, bestLen = 0
+      for (var y = 0; y <= H; y++) {
+        var lit = false
+        if (y < H) for (var x = 0; x < W; x++) { if (data[(y * W + x) * 4 + 3] > 40) { lit = true; break } }
+        if (lit && runStart < 0) runStart = y
+        if (!lit && runStart >= 0) { if (y - runStart > bestLen) { bestLen = y - runStart; bestTop = runStart } runStart = -1 }
+      }
+      unloadImage(snapUrl)
+      var inkPx = bestLen / k
+      if (inkPx < 6 || inkPx > snapH * 0.8) return
+      root.followInk = Math.round(Math.min(18, inkPx) * 2) / 2
+      root.followCenter = snapTop + (bestTop + bestLen / 2) / k
+    }
+  }
 
   implicitWidth: button.implicitWidth
   implicitHeight: button.implicitHeight
@@ -127,10 +226,10 @@ BarWidget {
 
     Item {
       id: stage
-      width: 16
-      height: 16
+      width: Math.max(16, Math.ceil(root.ink + 4))
+      height: width
       anchors.centerIn: parent
-      anchors.verticalCenterOffset: root.elementaOnBar && !root.vertical ? -1 : 0
+      anchors.verticalCenterOffset: root.stageOffset
       scale: button.pressScale
 
       // Drawn marks: the arch, the circumpunct, the seal
@@ -143,6 +242,8 @@ BarWidget {
         property color tint: root.tint
         property real lw: root.stroke
         property bool solid: root.bold
+        property real inkSize: root.ink
+        onInkSizeChanged: requestPaint()
         onKindChanged: requestPaint()
         onTintChanged: requestPaint()
         onLwChanged: requestPaint()
@@ -272,7 +373,7 @@ BarWidget {
     }
   }
 
-  // A font glyph scaled so its ink is `target` px tall (or 16 px wide, if it
+  // A font glyph scaled so its ink is `target` px tall (or 4/3 of that wide, if it
   // is wide), then placed so the ink's center sits on the item's center.
   component InkGlyph: Item {
     id: g
@@ -284,7 +385,7 @@ BarWidget {
 
     TextMetrics { id: ref; text: g.glyph; font.family: g.family; font.weight: g.weight; font.pixelSize: 100 }
     readonly property real fit: ref.tightBoundingRect.height > 0
-      ? Math.min(g.target / ref.tightBoundingRect.height, 16 / Math.max(1, ref.tightBoundingRect.width))
+      ? Math.min(g.target / ref.tightBoundingRect.height, (g.target * 4 / 3) / Math.max(1, ref.tightBoundingRect.width))
       : 0.12
     readonly property real px: Math.max(6, Math.round(100 * fit * 2) / 2)
     TextMetrics { id: tm; text: g.glyph; font.family: g.family; font.weight: g.weight; font.pixelSize: g.px }
