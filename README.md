@@ -1,11 +1,16 @@
 # Portal
 
-The Omarchy menu button as a terminal glyph, in your choice of style.
+The Omarchy menu button as a terminal glyph, in your choice of fifteen styles.
 
 | Mark | Style |
 |---|---|
 | **Classic** | `>_`, the prompt itself |
+| **Dollar** | `$_`, the shell prompt |
+| **Arrow** | `➜_`, Oh My Zsh's arrow |
+| **Lambda** | `λ_`, the functional prompt |
 | **Modern** | a heavy chevron and a block cursor |
+| **Cursor** | the block cursor alone |
+| **Window** | a terminal window with three title-bar dots |
 | **Retro** | a little CRT monitor with a prompt on screen |
 | **Deco** | Art Deco streamline chevrons in a cut-corner frame |
 | **Atomic** | a Googie boomerang prompt and a starburst cursor |
@@ -28,6 +33,10 @@ Left-click opens the Omarchy menu, right-click opens a terminal, and middle-clic
 - **Color**: the bar's text color, or the theme accent. The seal keeps its vermilion.
 
 No dependencies, no network.
+
+## Tests
+- `node tests/marks.mjs` checks that every mark in settings can be drawn, placed and reached by middle-click, and that the defaults, README and manifest agree.
+- `tests/live.sh` renders every mark on the running bar in each size and Bold, checks gap, bottom line and height against the next widget, and scans the shell log. Settings are restored afterwards.
 
 ## License
 MIT

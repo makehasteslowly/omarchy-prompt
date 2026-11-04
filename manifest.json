@@ -6,7 +6,7 @@
   "author": "makehasteslowly",
   "license": "MIT",
   "homepage": "https://github.com/makehasteslowly/omarchy-portal",
-  "description": "The Omarchy menu button as a terminal glyph in your choice of style: Classic, Modern, Retro, Deco, Atomic, Nouveau, Alchemical, Zen, Seal or Pixel, plus the Omarchy, Arch, Hyprland and Linux marks. Every mark is drawn to one 12 px grid and centered on its ink, so it lines up with the bar; Match Elementa picks the style of Elementa Spaces' tradition. Left-click opens the menu, right-click a terminal. No dependencies, no network.",
+  "description": "The Omarchy menu button as a terminal glyph in your choice of style: Classic, Dollar, Arrow, Lambda, Modern, Cursor, Window, Retro, Deco, Atomic, Nouveau, Alchemical, Zen, Seal or Pixel, plus the Omarchy, Arch, Hyprland and Linux marks. It matches the size, bottom line and spacing of whatever follows it on the bar; Match Elementa picks the style of Elementa Spaces' tradition. Left-click opens the menu, right-click a terminal, middle-click steps to the next glyph. No dependencies, no network.",
   "kinds": [
     "bar-widget"
   ],
@@ -15,7 +15,7 @@
   },
   "barWidget": {
     "displayName": "Portal",
-    "description": "The menu button as a terminal glyph, in ten styles.",
+    "description": "The menu button as a terminal glyph, in fifteen styles.",
     "category": "Appearance",
     "allowMultiple": false,
     "defaultSection": "left",
@@ -38,8 +38,28 @@
             "label": "Classic  ·  >_"
           },
           {
+            "value": "dollar",
+            "label": "Dollar  ·  $_, the shell prompt"
+          },
+          {
+            "value": "arrow",
+            "label": "Arrow  ·  ➜_, Oh My Zsh"
+          },
+          {
+            "value": "lambda",
+            "label": "Lambda  ·  λ_"
+          },
+          {
             "value": "modern",
             "label": "Modern  ·  heavy chevron, block cursor"
+          },
+          {
+            "value": "cursor",
+            "label": "Cursor  ·  the block cursor alone"
+          },
+          {
+            "value": "window",
+            "label": "Window  ·  a terminal window"
           },
           {
             "value": "retro",

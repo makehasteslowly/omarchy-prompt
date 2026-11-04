@@ -65,7 +65,7 @@ BarWidget {
   readonly property bool lightBar: 0.2126 * barBg.r + 0.7152 * barBg.g + 0.0722 * barBg.b > 0.48
 
   readonly property var traditionMarks: ({ elements: "deco", alchemy: "alchemy", godai: "zen", wuxing: "seal" })
-  readonly property var drawnMarks: ["classic", "modern", "retro", "deco", "atomic", "nouveau", "alchemy", "zen", "seal", "pixel"]
+  readonly property var drawnMarks: ["classic", "dollar", "arrow", "lambda", "modern", "cursor", "window", "retro", "deco", "atomic", "nouveau", "alchemy", "zen", "seal", "pixel"]
   readonly property var fontMarks: ({
     omarchy:   { glyph: 0xE900, family: "omarchy" },
     archlinux: { glyph: 0xE732, family: "" },
@@ -74,7 +74,7 @@ BarWidget {
   })
   // Middle-click steps through the marks in the settings order. The new mark
   // shows at once (pendingMark) and is saved like any setting.
-  readonly property var cycleOrder: ["classic", "modern", "retro", "deco", "atomic", "nouveau", "alchemy", "zen", "seal", "pixel",
+  readonly property var cycleOrder: ["classic", "dollar", "arrow", "lambda", "modern", "cursor", "window", "retro", "deco", "atomic", "nouveau", "alchemy", "zen", "seal", "pixel",
                                      "omarchy", "archlinux", "hyprland", "linux"]
   property string pendingMark: ""
   onMarkSettingChanged: pendingMark = ""
@@ -123,12 +123,14 @@ BarWidget {
   // Drawn marks: sideways stretch of the grid (prompt shapes are wider than
   // tall), and the exact left/right extent of each mark's ink, strokes
   // included, in grid units. Font marks report their own ink width.
-  readonly property var markStretch: ({ classic: 1.25, alchemy: 1.25, modern: 1.15, atomic: 1.15, nouveau: 1.15, retro: 1.15 })
-  readonly property var markExtents: ({ classic: [0.6, 11.6], modern: [1, 11.6], retro: [0, 12], deco: [0, 12], atomic: [0, 11.6],
+  readonly property var markStretch: ({ classic: 1.25, dollar: 1.25, arrow: 1.25, lambda: 1.25, alchemy: 1.25,
+                                        modern: 1.15, atomic: 1.15, nouveau: 1.15, retro: 1.15, window: 1.15 })
+  readonly property var markExtents: ({ classic: [0.6, 11.6], dollar: [0.2, 12], arrow: [0.2, 12], lambda: [0, 12],
+                                        cursor: [2.8, 9.2], window: [0, 12], modern: [1, 11.6], retro: [0, 12], deco: [0, 12], atomic: [0, 11.6],
                                         nouveau: [0.6, 11.8], alchemy: [0, 12], zen: [0, 12], seal: [0, 12], pixel: [-1.5, 13.5] })
   // Where the visible ink ends at the bottom, in grid units, for marks whose
   // lowest point is a fine tip that fades out on screen (others end at 12)
-  readonly property var markBottoms: ({ atomic: 10.8 })
+  readonly property var markBottoms: ({ atomic: 10.8, modern: 11.5 })
   readonly property real gridUnit: ink / 12
   // Ink height actually drawn: font marks may carry an optical boost
   readonly property real markInk: drawn ? ink : ink * ((fontMarks[mark] && fontMarks[mark].optical) || 1)
@@ -413,6 +415,42 @@ BarWidget {
             var cells = [[0,0],[1,1],[2,2],[3,3],[2,4],[1,5],[0,6]]
             for (var i = 0; i < cells.length; i++) ctx.fillRect(X(x0 + cells[i][0] * p), Y(0.4 + cells[i][1] * p), p * u, p * u)
             ctx.fillRect(X(x0 + 5 * p), Y(12 - p), 4 * p * u, p * u)
+          } else if (kind === "dollar") {
+            // $_  the shell prompt: an S on a full-height bar, then the cursor
+            ctx.beginPath()
+            ctx.moveTo(X(6.2), Y(2.8))
+            ctx.bezierCurveTo(X(5.6), Y(1.4), X(1.2), Y(1.2), X(1), Y(3.6))
+            ctx.bezierCurveTo(X(0.8), Y(5.9), X(6.4), Y(5.7), X(6.4), Y(8.4))
+            ctx.bezierCurveTo(X(6.4), Y(10.9), X(1.6), Y(11), X(0.8), Y(9.2))
+            ctx.stroke()
+            line([3.7, h, 3.7, 12 - h])
+            line([8.4, 12 - h, 12 - h, 12 - h])
+          } else if (kind === "arrow") {
+            // ➜_  the Oh My Zsh arrow: a solid heavy arrow, then the cursor
+            poly([0.2, 4.3, 3.4, 4.3, 3.4, 0.3, 7.6, 6, 3.4, 11.7, 3.4, 7.7, 0.2, 7.7])
+            ctx.fill()
+            line([8.6, 12 - h, 12 - h, 12 - h])
+          } else if (kind === "lambda") {
+            // λ_  the functional prompt: a hooked long stroke, a short leg
+            ctx.beginPath()
+            ctx.moveTo(X(h), Y(1.4))
+            ctx.quadraticCurveTo(X(1.4), Y(0.2), X(2.4), Y(1.6))
+            ctx.lineTo(X(6.6), Y(12 - h))
+            ctx.stroke()
+            line([3.9, 5.6, h, 12 - h])
+            line([8.6, 12 - h, 12 - h, 12 - h])
+          } else if (kind === "window") {
+            // a terminal window: rounded frame, title bar with three dots, a prompt
+            rrect(h, h, 12 - 2 * h, 12 - 2 * h, 2); ctx.stroke()
+            ctx.lineWidth = lw * 0.8
+            line([h, 3.5, 12 - h, 3.5])
+            var dr = Math.max(0.55, lw * 0.42 / u)
+            for (var d = 0; d < 3; d++) { ctx.beginPath(); ctx.arc(X(2.1 + d * 1.6), Y(1.85), dr * u, 0, Math.PI * 2); ctx.fill() }
+            line([2.6, 5.4, 4.6, 7.2, 2.6, 9])
+            line([5.6, 9.2, 8.8, 9.2])
+          } else if (kind === "cursor") {
+            // the block cursor alone: the most minimal terminal there is
+            ctx.fillRect(X(2.8), Y(0.4), 6.4 * u, 11.6 * u)
           }
         }
       }
